@@ -17,7 +17,6 @@ def main():
 
     agent = SHMAgent(config)
     agent.run()
-    agent.finalize()
 
 
 if __name__ == '__main__':

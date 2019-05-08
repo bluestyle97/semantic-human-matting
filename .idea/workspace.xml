@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="801fb785-f296-40db-a7cd-e1b00f4eb906" name="Default Changelist" comment="" />
+    <list default="true" id="801fb785-f296-40db-a7cd-e1b00f4eb906" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/configs/pretrain_mnet.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pretrain_mnet.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/agents/shm.py" beforeDir="false" afterPath="$PROJECT_DIR$/agents/shm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configs/pretrain_tnet.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/configs/pretrain_tnet.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/datasets/adobe_dim.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasets/adobe_dim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/adobe_dim_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/data.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,29 +37,37 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="json" value="2" />
-          <entry key="py" value="71" />
-          <entry key="yaml" value="7" />
+          <entry key="log" value="2" />
+          <entry key="png" value="3" />
+          <entry key="py" value="78" />
+          <entry key="sh" value="5" />
+          <entry key="yaml" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
+          <entry key="Bash" value="5" />
+          <entry key="Image" value="3" />
           <entry key="JSON" value="2" />
-          <entry key="Python" value="71" />
-          <entry key="YAML" value="7" />
+          <entry key="PLAIN_TEXT" value="2" />
+          <entry key="Python" value="78" />
+          <entry key="YAML" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="dummy" value="41" />
-          <entry key="py" value="27154" />
-          <entry key="yaml" value="501" />
+          <entry key="dummy" value="45" />
+          <entry key="py" value="29322" />
+          <entry key="sh" value="82" />
+          <entry key="yaml" value="547" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="41" />
-          <entry key="Python" value="27154" />
-          <entry key="YAML" value="501" />
+          <entry key="Bash" value="82" />
+          <entry key="PLAIN_TEXT" value="45" />
+          <entry key="Python" value="29322" />
+          <entry key="YAML" value="547" />
         </counts>
       </usages-collector>
     </session>
@@ -58,24 +75,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/datasets/adobe_dim.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="287">
-              <caret line="63" column="49" lean-forward="true" selection-start-line="63" selection-start-column="49" selection-end-line="63" selection-end-column="49" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-                <marker date="1557215550011" expanded="true" signature="255:260" ph="..." />
-                <marker date="1557215550011" expanded="true" signature="1091:1096" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="23" column="9" lean-forward="true" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
+            <state relative-caret-position="342">
+              <caret line="18" column="15" selection-start-line="18" selection-start-column="15" selection-end-line="18" selection-end-column="15" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -84,38 +87,102 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/configs/pretrain_tnet.yaml">
+        <entry file="file://$PROJECT_DIR$/configs/pretrain_mnet.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
+            <state relative-caret-position="114">
+              <caret line="6" column="17" lean-forward="true" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pretrain_mnet.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19">
+              <caret line="1" column="28" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="28" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/configs/pretrain_tnet.yaml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="10" column="10" lean-forward="true" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pretrain_tnet.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19">
+              <caret line="1" column="68" lean-forward="true" selection-start-line="1" selection-start-column="68" selection-end-line="1" selection-end-column="68" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/agents/shm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5377">
-              <caret line="283" column="26" lean-forward="true" selection-start-line="283" selection-start-column="26" selection-end-line="283" selection-end-column="26" />
+            <state relative-caret-position="255">
+              <caret line="318" column="57" lean-forward="true" selection-start-line="318" selection-start-column="57" selection-end-line="318" selection-end-column="57" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <marker date="1557214266524" expanded="true" signature="4445:4506" ph="..." />
-                <marker date="1557214266524" expanded="true" signature="7852:11456" ph="..." />
+                <marker date="1557314562846" expanded="true" signature="4298:4338" ph="..." />
+                <marker date="1557314562846" expanded="true" signature="7627:11122" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/adobe_dim_utils.py">
+        <entry file="file://$PROJECT_DIR$/utils/metrics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="7" column="33" lean-forward="true" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
+            <state relative-caret-position="-39">
+              <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-417">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/datasets/adobe_dim.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1520">
+              <caret line="80" column="75" selection-start-line="80" selection-start-column="75" selection-end-line="80" selection-end-column="75" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <marker date="1557214492854" expanded="true" signature="6909:8707" ph="..." />
-                <marker date="1557214492854" expanded="true" signature="9491:9925" ph="..." />
-                <marker date="1557214492854" expanded="true" signature="9953:10276" ph="..." />
+                <marker date="1557305660384" expanded="true" signature="245:250" ph="..." />
+                <marker date="1557305660384" expanded="true" signature="1081:1086" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="623">
+              <caret line="159" column="21" selection-start-line="159" selection-start-column="21" selection-end-line="159" selection-end-column="21" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+                <marker date="1557306542939" expanded="true" signature="4914:5633" ph="..." />
+                <marker date="1557306542939" expanded="true" signature="5659:5664" ph="..." />
+                <marker date="1557306542939" expanded="true" signature="5659:7457" ph="..." />
+                <marker date="1557306542939" expanded="true" signature="8241:8675" ph="..." />
+                <marker date="1557306542939" expanded="true" signature="8703:9026" ph="..." />
               </folding>
             </state>
           </provider>
@@ -142,6 +209,9 @@
       <replace>'</replace>
     </replaceStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -156,7 +226,6 @@
         <option value="$PROJECT_DIR$/utils/adobe_utils.py" />
         <option value="$PROJECT_DIR$/utils/voc_utils.py" />
         <option value="$PROJECT_DIR$/utils/matting_human_utils.py" />
-        <option value="$PROJECT_DIR$/utils/data.py" />
         <option value="$PROJECT_DIR$/models/extractors.py" />
         <option value="$PROJECT_DIR$/models/pspnet.py" />
         <option value="$PROJECT_DIR$/utils/misc.py" />
@@ -166,10 +235,14 @@
         <option value="$PROJECT_DIR$/utils/config.py" />
         <option value="$PROJECT_DIR$/configs/shm_train.yaml" />
         <option value="$PROJECT_DIR$/models/shm.py" />
-        <option value="$PROJECT_DIR$/agents/shm.py" />
         <option value="$PROJECT_DIR$/utils/adobe_dim_utils.py" />
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/datasets/adobe_dim.py" />
+        <option value="$PROJECT_DIR$/utils/data.py" />
+        <option value="$PROJECT_DIR$/pretrain_tnet.sh" />
+        <option value="$PROJECT_DIR$/agents/shm.py" />
+        <option value="$PROJECT_DIR$/configs/pretrain_mnet.yaml" />
+        <option value="$PROJECT_DIR$/pretrain_mnet.sh" />
         <option value="$PROJECT_DIR$/configs/pretrain_tnet.yaml" />
       </list>
     </option>
@@ -203,6 +276,7 @@
       </profile-state>
     </entry>
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -239,6 +313,11 @@
             <path>
               <item name="semantic-human-matting" type="b2602c69:ProjectViewProjectNode" />
               <item name="semantic-human-matting" type="462c0819:PsiDirectoryNode" />
+              <item name="sample" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="semantic-human-matting" type="b2602c69:ProjectViewProjectNode" />
+              <item name="semantic-human-matting" type="462c0819:PsiDirectoryNode" />
               <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -256,6 +335,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/models" />
     </key>
   </component>
@@ -307,7 +387,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/adobe_dim_utils.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/data.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -414,9 +494,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.24905184" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1978022" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -429,7 +508,7 @@
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="File Transfer" order="8" weight="0.32959184" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.27857143" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.27857143" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32959184" />
       <window_info anchor="bottom" id="Run" order="13" weight="0.29897958" />
@@ -500,16 +579,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/pspnet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1406">
-          <caret line="74" column="24" selection-start-line="74" selection-start-column="24" selection-end-line="74" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/agents/fcn.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
@@ -521,13 +590,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/metrics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="7" lean-forward="true" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -550,20 +612,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/misc.py">
+    <entry file="file://$PROJECT_DIR$/models/pspnet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="8" column="28" lean-forward="true" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
+        <state relative-caret-position="513">
+          <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/config.py">
+    <entry file="file://$PROJECT_DIR$/experiments/mnet/logs/exp_error.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/mnet/logs/exp_debug.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sample/sample_trimap.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sample/sample_alpha.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sample/sample_image.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/misc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        <state relative-caret-position="152">
+          <caret line="8" column="28" lean-forward="true" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -572,8 +649,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/shm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="8" lean-forward="true" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
+        <state relative-caret-position="1129">
+          <caret line="112" lean-forward="true" selection-start-line="112" selection-end-line="112" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
             <marker date="1557213301958" expanded="true" signature="125:130" ph="..." />
@@ -582,57 +659,104 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/adobe_dim_utils.py">
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2018.2/python_stubs/-666613745/builtins.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="33" lean-forward="true" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
+        <state relative-caret-position="274">
+          <caret line="835" column="8" selection-start-line="835" selection-start-column="8" selection-end-line="835" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-417">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/metrics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-39">
+          <caret line="7" column="7" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datasets/adobe_dim.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1520">
+          <caret line="80" column="75" selection-start-line="80" selection-start-column="75" selection-end-line="80" selection-end-column="75" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1557214492854" expanded="true" signature="6909:8707" ph="..." />
-            <marker date="1557214492854" expanded="true" signature="9491:9925" ph="..." />
-            <marker date="1557214492854" expanded="true" signature="9953:10276" ph="..." />
+            <marker date="1557305660384" expanded="true" signature="245:250" ph="..." />
+            <marker date="1557305660384" expanded="true" signature="1081:1086" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="623">
+          <caret line="159" column="21" selection-start-line="159" selection-start-column="21" selection-end-line="159" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+            <marker date="1557306542939" expanded="true" signature="4914:5633" ph="..." />
+            <marker date="1557306542939" expanded="true" signature="5659:5664" ph="..." />
+            <marker date="1557306542939" expanded="true" signature="5659:7457" ph="..." />
+            <marker date="1557306542939" expanded="true" signature="8241:8675" ph="..." />
+            <marker date="1557306542939" expanded="true" signature="8703:9026" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="23" column="9" lean-forward="true" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
+        <state relative-caret-position="342">
+          <caret line="18" column="15" selection-start-line="18" selection-start-column="15" selection-end-line="18" selection-end-column="15" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/datasets/adobe_dim.py">
+    <entry file="file://$PROJECT_DIR$/agents/shm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="63" column="49" lean-forward="true" selection-start-line="63" selection-start-column="49" selection-end-line="63" selection-end-column="49" />
+        <state relative-caret-position="255">
+          <caret line="318" column="57" lean-forward="true" selection-start-line="318" selection-start-column="57" selection-end-line="318" selection-end-column="57" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1557215550011" expanded="true" signature="255:260" ph="..." />
-            <marker date="1557215550011" expanded="true" signature="1091:1096" ph="..." />
+            <marker date="1557314562846" expanded="true" signature="4298:4338" ph="..." />
+            <marker date="1557314562846" expanded="true" signature="7627:11122" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/configs/pretrain_mnet.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="17" lean-forward="true" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pretrain_mnet.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="28" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pretrain_tnet.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="68" lean-forward="true" selection-start-line="1" selection-start-column="68" selection-end-line="1" selection-end-column="68" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/configs/pretrain_tnet.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/agents/shm.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5377">
-          <caret line="283" column="26" lean-forward="true" selection-start-line="283" selection-start-column="26" selection-end-line="283" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <marker date="1557214266524" expanded="true" signature="4445:4506" ph="..." />
-            <marker date="1557214266524" expanded="true" signature="7852:11456" ph="..." />
-          </folding>
+        <state relative-caret-position="190">
+          <caret line="10" column="10" lean-forward="true" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
         </state>
       </provider>
     </entry>

@@ -1,9 +1,10 @@
 import cv2
+import math
 import torch
 import torch.utils.data as data
 
-from utils.adobe_dim_utils import make_adobe_dim_dataset
-import utils.adobe_dim_utils as extended_transforms
+from utils.data import make_adobe_dim_dataset
+import utils.data as extended_transforms
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -46,7 +47,7 @@ class AdobeDIMDataLoader(object):
             ]
             train_set = AdobeDIMDataset(root, mode, transforms)
             self.train_loader = data.DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=4)
-            self.train_iterations = len(train_set) // batch_size + 1
+            self.train_iterations = int(math.ceil(len(train_set) / batch_size))
         elif mode == 'pretrain_mnet':
             transforms = [
                 extended_transforms.RandomPatch(320),
@@ -57,7 +58,7 @@ class AdobeDIMDataLoader(object):
             ]
             train_set = AdobeDIMDataset(root, mode, transforms)
             self.train_loader = data.DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=4)
-            self.train_iterations = len(train_set) // batch_size + 1
+            self.train_iterations = int(math.ceil(len(train_set) / batch_size))
         elif mode == 'end_to_end':
             transforms = [
                 extended_transforms.RandomPatch(320),
@@ -67,7 +68,7 @@ class AdobeDIMDataLoader(object):
             ]
             train_set = AdobeDIMDataset(root, mode, transforms)
             self.train_loader = data.DataLoader(train_set, batch_size=batch_size, shuffle=True, num_workers=4)
-            self.train_iterations = len(train_set) // batch_size + 1
+            self.train_iterations = int(math.ceil(len(train_set) / batch_size))
         elif mode == 'test':
             transforms = [
                 extended_transforms.Normalize(),
@@ -75,7 +76,7 @@ class AdobeDIMDataLoader(object):
             ]
             test_set = AdobeDIMDataset(root, mode, transforms)
             self.test_loader = data.DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=4)
-            self.test_iterations = len(test_set) // batch_size + 1
+            self.test_iterations = int(math.ceil(len(test_set) / batch_size))
         else:
             raise Exception('Please choose a proper mode for data loading')
 

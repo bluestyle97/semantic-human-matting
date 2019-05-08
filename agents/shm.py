@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.backends import cudnn
-from torchvision.utils import make_grid
+from torchvision.utils import make_grid, save_image
 from tqdm import tqdm
 from tensorboardX import SummaryWriter
 
@@ -14,6 +14,7 @@ from models.loss import PredictionL1Loss, ClassificationLoss
 from datasets.adobe_dim import AdobeDIMDataLoader
 from utils.metrics import AverageMeter
 from utils.misc import print_cuda_statistics
+from utils.data import make_sample
 
 cudnn.benchmark = True
 
@@ -88,18 +89,11 @@ class SHMAgent(object):
     def trimap_to_image(self, trimap):
         n, c, h, w = trimap.size()
         if c == 3:
-            trimap = torch.argmax(trimap, dim=1, keepdim=False).numpy()
-        else:
-            trimap = trimap.numpy()
-        trimap[trimap==0] = 0
-        trimap[trimap==1] = 128
-        trimap[trimap==2] = 255
-        trimap =  torch.from_numpy(trimap.reshape(n, 1, h, w)).int()
-        return trimap
+            trimap = torch.argmax(trimap, dim=1, keepdim=False)
+        return trimap.div_(2.0).view(n, 1, h, w)
 
     def alpha_to_image(self, alpha):
-        alpha = alpha * 255
-        return alpha.int()
+        return alpha.clamp_(0, 1)
 
     def run(self):
         assert self.config.mode in ['pretrain_tnet', 'pretrain_mnet', 'end_to_end', 'test']
@@ -112,9 +106,10 @@ class SHMAgent(object):
                 self.train_end_to_end()
             else:
                 self.test()
-
         except KeyboardInterrupt:
-            self.logger.info("You have entered CTRL+C.. Wait to finalize")
+            self.logger.info('You have entered CTRL+C.. Wait to finalize')
+        finally:
+            self.finalize()
 
     def train_tnet(self):
         self.model = self.model.tnet
@@ -124,19 +119,20 @@ class SHMAgent(object):
                                     weight_decay=self.config.weight_decay)
         self.load_checkpoint()
 
-        self.model.train()
         self.model = self.model.to(self.device)
         self.loss_t = self.loss_t.to(self.device)
         if self.cuda and self.config.ngpu > 1:
             self.model = nn.DataParallel(self.model, device_ids=list(range(self.config.ngpu)))
 
-        sample_image, sample_trimap_gt, _ = next(iter(self.data_loader.train_loader))
+        sample_image, sample_trimap_gt, _ = make_sample(self.config.mode)
         for epoch in range(self.current_epoch, self.config.max_epoch):
-            loss_t_epoch = AverageMeter()
+            self.model.train()
 
+            loss_t_epoch = AverageMeter()
             tqdm_loader = tqdm(self.data_loader.train_loader,
                                total=self.data_loader.train_iterations,
                                desc="Epoch-{}-".format(self.current_epoch + 1))
+
             for image, trimap_gt, _ in tqdm_loader:
                 image, trimap_gt = image.to(self.device), trimap_gt.to(self.device)
                 trimap_pre = self.model(image)
@@ -152,16 +148,17 @@ class SHMAgent(object):
 
             self.writer.add_scalar('pretrain_tnet/loss_classification', loss_t_epoch.val, self.current_epoch)
             if self.current_epoch % self.config.sample_period == 0:
-                sample_image, sample_trimap_gt = sample_image.to(self.device), sample_trimap_gt.to(self.device)
-                sample_trimap_pre = self.model(sample_image).cpu()
-                sample_trimap_pre = self.trimap_to_image(sample_trimap_pre)
-                sample_trimap_gt = self.trimap_to_image(sample_trimap_gt)
-                self.writer.add_image('pretrain_tnet/sample_trimap_prediction',
-                                      make_grid(sample_trimap_pre, nrow=2, normalize=True, scale_each=True),
-                                      self.current_epoch)
-                self.writer.add_image('pretrain_tnet/sample_trimap_ground_truth',
-                                      make_grid(sample_trimap_gt, nrow=2, normalize=True, scale_each=True),
-                                      self.current_epoch)
+                self.model.eval()
+                with torch.no_grad():
+                    sample_image = sample_image.to(self.device)
+                    sample_trimap_pre = self.model(sample_image)
+                    sample_trimap_pre = self.trimap_to_image(sample_trimap_pre.cpu())
+                    self.writer.add_image('pretrain_tnet/sample_trimap_prediction',
+                                          make_grid(sample_trimap_pre, nrow=1),
+                                          self.current_epoch)
+                    save_image(sample_trimap_pre,
+                               os.path.join(self.config.out_dir, 'sample_trimap_{}.png'.format(self.current_epoch)),
+                               nrow=1, padding=0)
             if self.current_epoch % self.config.checkpoint_period == 0:
                 self.save_checkpoint()
             print("Training Results at epoch-" + str(self.current_epoch) + " | " +
@@ -172,17 +169,18 @@ class SHMAgent(object):
         self.loss_p = PredictionL1Loss()
         self.optimizer = optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()),
                                     lr=self.config.lr, betas=(0.9, 0.999),
-                                    weight_decay=self.config.weght_decay)
+                                    weight_decay=self.config.weight_decay)
         self.load_checkpoint()
 
-        self.model.train()
         self.model = self.model.to(self.device)
         self.loss_p = self.loss_p.to(self.device)
         if self.cuda and self.config.ngpu > 1:
             self.model = nn.DataParallel(self.model, device_ids=list(range(self.config.ngpu)))
 
-        sample_image, sample_trimap_gt, sample_alpha_gt = next(iter(self.data_loader.train_loader))
+        sample_image, sample_trimap_gt, sample_alpha_gt = make_sample(self.config.mode)
+        sample_trimap_gt = sample_trimap_gt.float()
         for epoch in range(self.current_epoch, self.config.max_epoch):
+            self.model.train()
             loss_p_epoch = AverageMeter()
             loss_alpha_epoch = AverageMeter()
             loss_comps_epoch = AverageMeter()
@@ -191,7 +189,7 @@ class SHMAgent(object):
                                total=self.data_loader.train_iterations,
                                desc="Epoch-{}-".format(self.current_epoch + 1))
             for image, trimap_gt, alpha_gt in tqdm_loader:
-                image, trimap_gt, alpha_gt = image.to(self.device), trimap_gt.to(self.device), alpha_gt.to(self.device)
+                image, trimap_gt, alpha_gt = image.to(self.device), trimap_gt.float().to(self.device), alpha_gt.to(self.device)
 
                 input = torch.cat([image, trimap_gt], dim=1)
                 alpha_pre = self.model(input)
@@ -211,18 +209,18 @@ class SHMAgent(object):
             self.writer.add_scalar('pretrain_mnet/loss_alpha_prediction', loss_alpha_epoch.val, self.current_epoch)
             self.writer.add_scalar('pretrain_mnet/loss_composition', loss_comps_epoch.val, self.current_epoch)
             if self.current_epoch % self.config.sample_period == 0:
-                sample_image, sample_trimap_gt, sample_alpha_gt = \
-                    sample_image.to(self.device), sample_trimap_gt.to(self.device), sample_alpha_gt.to(self.device)
-                sample_input = torch.cat((sample_image, sample_trimap_gt), dim=1)
-                sample_alpha_pre = self.model(sample_input).cpu()
-                sample_alpha_pre = self.alpha_to_image(sample_alpha_pre)
-                sample_alpha_gt = self.alpha_to_image(sample_alpha_pre)
-                self.writer.add_image('pretrain_mnet/sample_alpha_prediction',
-                                      make_grid(sample_alpha_pre, nrow=2, normalize=True, scale_each=True),
-                                      self.current_epoch)
-                self.writer.add_image('pretrain_mnet/sample_alpha_ground_truth',
-                                      make_grid(sample_alpha_gt, nrow=2, normalize = True, scale_each=True),
-                                      self.current_epoch)
+                self.model.eval()
+                with torch.no_grad():
+                    sample_input = torch.cat((sample_image, sample_trimap_gt), dim=1)
+                    sample_input = sample_input.to(self.device)
+                    sample_alpha_pre = self.model(sample_input)
+                    sample_alpha_pre = self.alpha_to_image(sample_alpha_pre.cpu())
+                    self.writer.add_image('pretrain_mnet/sample_alpha_prediction',
+                                          make_grid(sample_alpha_pre, nrow=1),
+                                          self.current_epoch)
+                    save_image(sample_alpha_pre,
+                               os.path.join(self.config.out_dir, 'sample_alpha_{}.png'.format(self.current_epoch)),
+                               nrow=1, padding=0)
             if self.current_epoch % self.config.checkpoint_period == 0:
                 self.save_checkpoint()
             print("Training Results at epoch-" + str(self.current_epoch) + " | " +
@@ -234,17 +232,18 @@ class SHMAgent(object):
         self.loss_t = ClassificationLoss()
         self.optimizer = optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()),
                                     lr=self.config.lr, betas=(0.9, 0.999),
-                                    weight_decay=self.config.weght_decay)
+                                    weight_decay=self.config.weight_decay)
         self.load_checkpoint()
 
-        self.model.train()
         self.model = self.model.to(self.device)
         self.loss_p = self.loss_p.to(self.device)
         self.loss_t = self.loss_t.to(self.device)
         if self.cuda and self.config.ngpu > 1:
             self.model = nn.DataParallel(self.model, device_ids=list(range(self.config.ngpu)))
 
+        sample_image, sample_trimap_gt, sample_alpha_gt = make_sample(self.config.mode)
         for epoch in range(self.current_epoch, self.config.max_epoch):
+            self.model.train()
             loss_epoch = AverageMeter()
             loss_p_epoch = AverageMeter()
             loss_alpha_epoch = AverageMeter()
@@ -278,6 +277,25 @@ class SHMAgent(object):
             self.writer.add_scalar('end_eo_end/loss_alpha_prediction', loss_alpha_epoch.val, self.current_epoch)
             self.writer.add_scalar('end_to_end/loss_composition', loss_comps_epoch.val, self.current_epoch)
             self.writer.add_scalar('end_to_end/loss_classification', loss_t_epoch.val, self.current_epoch)
+            if self.current_epoch % self.config.sample_period == 0:
+                self.model.eval()
+                with torch.no_grad():
+                    sample_image = sample_image.to(self.device)
+                    sample_trimap_pre, sample_alpha_pre = self.model(sample_image)
+                    sample_trimap_pre = self.trimap_to_image(sample_trimap_pre.cpu())
+                    sample_alpha_pre = self.alpha_to_image(sample_alpha_pre.cpu())
+                    self.writer.add_image('sample_trimap_prediction',
+                                          make_grid(sample_trimap_pre, nrow=1),
+                                          self.current_epoch)
+                    self.writer.add_image('sample_alpha_prediction',
+                                          make_grid(sample_alpha_pre, nrow=1),
+                                          self.current_epoch)
+                    save_image(sample_trimap_pre,
+                               os.path.join(self.config.out_dir, 'sample_trimap_{}.png'.format(self.current_epoch)),
+                               nrow=1, padding=0)
+                    save_image(sample_alpha_pre,
+                               os.path.join(self.config.out_dir, 'sample_alpha_{}.png'.format(self.current_epoch)),
+                               nrow=1, padding=0)
             if self.current_epoch % self.config.checkpoint_period == 0:
                 self.save_checkpoint()
             print("Training Results at epoch-" + str(self.current_epoch) + " | " +
@@ -288,25 +306,29 @@ class SHMAgent(object):
     def test(self):
         self.load_checkpoint()
 
-        self.model.eval()
         self.model = self.model.to(self.device)
 
         tqdm_loader = tqdm(self.data_loader.test_loader, total=self.data_loader.test_iterations,
-                          desc="Testing at checkpoint -{}-".format(self.config.checkpoint_file))
+                          desc="Testing at checkpoint")
 
+        self.model.eval()
         for image_name, image, trimap_gt, alpha_gt in tqdm_loader:
             batch_size = len(image_name)
-            trimap_pre, alpha_pre = self.model(image)
-            for i in range(batch_size):
-                cv2.imwrite(os.path.join(self.config.out_dir, '{}_trimap.png'.format(image_name[i][:-4])),
-                            trimap_pre[i])
-                cv2.imwrite(os.path.join(self.config.out_dir, '{}_alpha.png'.format(image_name[i][:-4])),
-                            alpha_pre[i])
+            image = image.to(self.device)
+            with torch.no_grad():
+                trimap_pre, alpha_pre = self.model(image)
+                for i in range(batch_size):
+                    save_image(trimap_pre[i].cpu(),
+                               os.path.join(self.config.out_dir, '{}_trimap.png'.format(image_name[i][:-4])),
+                               nrow=1, padding=0)
+                    save_image(alpha_pre[i].cpu(),
+                               os.path.join(self.config.out_dir, '{}_alpha.png'.format(image_name[i][:-4])),
+                               nrow=1, padding=0)
         print('Test finished')
 
     def finalize(self):
-        print("Please wait while finalizing the operation.. Thank you")
+        print('Please wait while finalizing the operation.. Thank you')
         self.save_checkpoint()
-        self.writer.export_scalars_to_json("{}all_scalars.json".format(self.config.summary_dir))
+        self.writer.export_scalars_to_json(os.path.join(self.config.summary_dir, 'all_scalars.json'))
         self.writer.close()
         self.data_loader.finalize()

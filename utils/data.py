@@ -105,42 +105,6 @@ def make_adobe_dim_dataset(root, mode):
     assert mode in ['pretrain_tnet', 'pretrain_mnet', 'end_to_end', 'test']
 
     items = []
-    # if mode == 'pretrain_tnet':
-    #     fg_list = [l.strip('\n') for l in
-    #                open(os.path.join(root, 'train_set', 'training_fg_names.txt'), 'r').readlines()]
-    #     for fg in fg_list:
-    #         trimap_name = os.path.join(root, 'train_set', 'trimap', fg.replace('jpg', 'png'))
-    #         for j in range(100):
-    #             img_name = os.path.join(root, 'train_set', 'merged', fg[:-4] + '_{}.png'.format(j))
-    #             items.append((img_name, trimap_name))
-    #
-    # elif mode == 'pretrain_mnet' or mode == 'train':
-    #     fg_list = [l.strip('\n') for l in
-    #                open(os.path.join(root, 'train_set', 'training_fg_names.txt'), 'r').readlines()]
-    #     bg_list = [l.strip('\n') for l in
-    #                open(os.path.join(root, 'train_set', 'training_bg_names.txt'), 'r').readlines()]
-    #     for i in range(len(fg_list)):
-    #         fg = fg_list[i]
-    #         fg_name = os.path.join(root, 'train_set', 'fg', fg)
-    #         alpha_name = os.path.join(root, 'train_set', 'alpha', fg)
-    #         trimap_name = os.path.join(root, 'train_set', 'trimap', fg.replace('jpg', 'png'))
-    #         for j in range(100):
-    #             bg_name = os.path.join(root, 'train_set', 'bg', bg_list[i * 100 + j])
-    #             img_name = os.path.join(root, 'train_set', 'merged', fg[:-4] + '_{}.png'.format(j))
-    #             items.append((img_name, trimap_name, alpha_name, fg_name, bg_name))
-    #
-    # elif mode == 'test':
-    #     fg_list = [l.strip('\n') for l in
-    #                open(os.path.join(root, 'test_set', 'test_fg_names.txt'), 'r').readlines()]
-    #     for fg in fg_list:
-    #         alpha_name = os.path.join(root, 'test_set', 'alpha', fg)
-    #         for j in range(20):
-    #             img_name = os.path.join(root, 'test_set', 'merged', fg[:-4] + '_{}.png'.format(j))
-    #             items.append((img_name, alpha_name))
-    #
-    # else:
-    #     raise Exception('Please choose proper mode for data')
-
     if mode == 'pretrain_tnet' or mode == 'pretrain_mnet' or mode == 'end_to_end':
         fg_list = [l.strip('\n') for l in
                    open(os.path.join(root, 'train_set', 'training_fg_names.txt'), 'r').readlines()]
@@ -163,6 +127,22 @@ def make_adobe_dim_dataset(root, mode):
         raise Exception('Please choose proper mode for data')
 
     return items
+
+
+def make_sample(mode, sample_dir='sample/'):
+    image = cv2.imread(os.path.join(sample_dir, 'sample_image.png'), cv2.IMREAD_COLOR)
+    trimap = cv2.imread(os.path.join(sample_dir, 'sample_trimap.png'), cv2.IMREAD_GRAYSCALE)
+    alpha = cv2.imread(os.path.join(sample_dir, 'sample_alpha.png'), cv2.IMREAD_GRAYSCALE)
+    transforms = []
+    if mode == 'pretrain_tnet' or mode == 'end_to_end':
+        transforms = [Normalize(), NumpyToTensor()]
+    elif mode == 'pretrain_mnet':
+        transforms = [Normalize(), TrimapToCategorical(), NumpyToTensor()]
+    for transform in transforms:
+        image, trimap, alpha = transform(image, trimap, alpha)
+
+    c, h, w = trimap.size()
+    return image.view(1, 3, h, w), trimap.view(1, c, h, w), alpha.view(1, 1, h, w)
 
 
 class RandomPatch(object):
