@@ -1,7 +1,3 @@
-"""
-This file will contain the metrics of the framework
-"""
-import numpy as np
 
 
 class AverageMeter:

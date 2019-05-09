@@ -1,4 +1,3 @@
-import cv2
 import os
 import logging
 import torch
@@ -41,13 +40,14 @@ class SHMAgent(object):
 
         self.writer = SummaryWriter(log_dir=self.config.summary_dir, comment='SHM')
 
-    def save_checkpoint(self):
+    def save_checkpoint(self, filename=None):
         state = {
             'epoch': self.current_epoch,
             'state_dict': self.model.state_dict(),
             'optimizer': self.optimizer.state_dict(),
         }
-        filename = 'checkpoint-epoch{}.pth.tar'.format(self.current_epoch)
+        if filename is None:
+            filename = 'checkpoint-epoch{}.pth.tar'.format(self.current_epoch)
         torch.save(state, os.path.join(self.config.checkpoint_dir, filename))
 
     def load_checkpoint(self):
@@ -57,7 +57,9 @@ class SHMAgent(object):
                     filename = os.path.join(self.config.checkpoint_dir, self.config.tnet_checkpoint)
                     checkpoint = torch.load(filename)
                     self.current_epoch = checkpoint['epoch']
-                    self.model.load_state_dict(checkpoint['state_dict'])
+                    model_to_load = {k.replace('module.', ''): v for k, v in checkpoint['state_dict'].items()}
+                    self.model.load_state_dict(model_to_load)
+                    self.model.to(self.device)
                     self.optimizer.load_state_dict(checkpoint['optimizer'])
             elif self.config.mode == 'pretrain_mnet':
                 if self.config.mnet_checkpoint is not None:
@@ -65,14 +67,31 @@ class SHMAgent(object):
                     checkpoint = torch.load(filename)
                     self.current_epoch = checkpoint['epoch']
                     self.model.load_state_dict(checkpoint['state_dict'])
+                    self.model.to(self.device)
                     self.optimizer.load_state_dict(checkpoint['optimizer'])
-            elif self.config.mode == 'end_to_end' or self.config.mode == 'test':
+            elif self.config.mode == 'end_to_end':
                 if self.config.shm_checkpoint is not None:
                     filename = os.path.join(self.config.checkpoint_dir, self.config.shm_checkpoint)
                     checkpoint = torch.load(filename)
                     self.current_epoch = checkpoint['epoch']
                     self.model.load_state_dict(checkpoint['state_dict'])
+                    self.model.to(self.device)
                     self.optimizer.load_state_dict(checkpoint['optimizer'])
+                    return
+                if self.config.tnet_checkpoint is not None:
+                    filename = os.path.join('experiment', 'tnet', 'checkpoints', self.config.tnet_checkpoint)
+                    checkpoint = torch.load(filename)
+                    self.model.tnet.load_state_dict(checkpoint['state_dict'])
+                if self.config.mnet_checkpoint is not None:
+                    filename = os.path.join('experiment', 'mnet', 'checkpoints', self.config.mnet_checkpoint)
+                    checkpoint = torch.load(filename)
+                    self.model.mnet.load_state_dict(checkpoint['state_dict'])
+            elif self.config.mode == 'test':
+                if self.config.shm_checkpoint is not None:
+                    filename = os.path.join(self.config.checkpoint_dir, self.config.shm_checkpoint)
+                    checkpoint = torch.load(filename)
+                    self.current_epoch = checkpoint['epoch']
+                    self.model.load_state_dict(checkpoint['state_dict'])
                     return
                 if self.config.tnet_checkpoint is not None:
                     filename = os.path.join('experiment', 'tnet', 'checkpoints', self.config.tnet_checkpoint)
@@ -90,7 +109,7 @@ class SHMAgent(object):
         n, c, h, w = trimap.size()
         if c == 3:
             trimap = torch.argmax(trimap, dim=1, keepdim=False)
-        return trimap.div_(2.0).view(n, 1, h, w)
+        return trimap.float().div_(2.0).view(n, 1, h, w)
 
     def alpha_to_image(self, alpha):
         return alpha.clamp_(0, 1)
@@ -108,7 +127,6 @@ class SHMAgent(object):
                 self.test()
         except KeyboardInterrupt:
             self.logger.info('You have entered CTRL+C.. Wait to finalize')
-        finally:
             self.finalize()
 
     def train_tnet(self):
@@ -119,8 +137,8 @@ class SHMAgent(object):
                                     weight_decay=self.config.weight_decay)
         self.load_checkpoint()
 
-        self.model = self.model.to(self.device)
-        self.loss_t = self.loss_t.to(self.device)
+        self.model.to(self.device)
+        self.loss_t.to(self.device)
         if self.cuda and self.config.ngpu > 1:
             self.model = nn.DataParallel(self.model, device_ids=list(range(self.config.ngpu)))
 
@@ -172,8 +190,8 @@ class SHMAgent(object):
                                     weight_decay=self.config.weight_decay)
         self.load_checkpoint()
 
-        self.model = self.model.to(self.device)
-        self.loss_p = self.loss_p.to(self.device)
+        self.model.to(self.device)
+        self.loss_p.to(self.device)
         if self.cuda and self.config.ngpu > 1:
             self.model = nn.DataParallel(self.model, device_ids=list(range(self.config.ngpu)))
 
@@ -235,9 +253,9 @@ class SHMAgent(object):
                                     weight_decay=self.config.weight_decay)
         self.load_checkpoint()
 
-        self.model = self.model.to(self.device)
-        self.loss_p = self.loss_p.to(self.device)
-        self.loss_t = self.loss_t.to(self.device)
+        self.model.to(self.device)
+        self.loss_p.to(self.device)
+        self.loss_t.to(self.device)
         if self.cuda and self.config.ngpu > 1:
             self.model = nn.DataParallel(self.model, device_ids=list(range(self.config.ngpu)))
 
@@ -328,7 +346,7 @@ class SHMAgent(object):
 
     def finalize(self):
         print('Please wait while finalizing the operation.. Thank you')
-        self.save_checkpoint()
+        self.save_checkpoint('checkpoint-suspend.pth.tar')
         self.writer.export_scalars_to_json(os.path.join(self.config.summary_dir, 'all_scalars.json'))
         self.writer.close()
         self.data_loader.finalize()

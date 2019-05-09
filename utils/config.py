@@ -1,9 +1,7 @@
 import os
-
 import logging
 from logging import Formatter
 from logging.handlers import RotatingFileHandler
-
 import yaml
 from easydict import EasyDict
 from pprint import pprint
