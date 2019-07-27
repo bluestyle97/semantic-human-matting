@@ -121,7 +121,8 @@ class SHM(nn.Module):
     def forward(self, x):
         trimap = self.tnet(x)
         trimap_softmax = F.softmax(trimap, dim=1)
-        bs, fs, us = torch.split(trimap_softmax, 1, dim=1)
+        # trimap_softmax.detach()
+        bs, us, fs = torch.split(trimap_softmax, 1, dim=1)
 
         mnet_input = torch.cat((x, trimap_softmax), dim=1)
         alpha_r = self.mnet(mnet_input)
